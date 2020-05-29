@@ -10,5 +10,9 @@ def check_even(num):
 
 my_num = int(input("Enter Your Number  :  "))
 print("\n")
+
+check_even(my_num)
+
+
 check_even(my_num)
 
