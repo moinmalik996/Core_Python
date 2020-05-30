@@ -17,6 +17,6 @@ print(type(c))
 print("\n")
 # Integer to String
 
-str = str(c)
-print(str)
+str1 = str(c)
+print(str1)
 print(type(str))
