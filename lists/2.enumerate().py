@@ -1,4 +1,5 @@
 # Print value with index
+#!/usr/bin/python
 
 my_list = ["Mon ", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
