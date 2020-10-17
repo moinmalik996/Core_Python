@@ -18,3 +18,4 @@
 [0921/152344.893:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [0921/152344.893:ERROR:exception_snapshot_win.cc(99)] thread ID 7384 not found in process
 [1014/162229.228:ERROR:file_io.cc(90)] ReadExactly: expected 36, observed 0
+[1015/112839.166:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
