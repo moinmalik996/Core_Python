@@ -35,6 +35,17 @@ from_date.click()
 date = webdriver.find_element_by_css_selector('datepicker-00K-5023-4 > button')
 date.click()
 
-for x in 
-    contact_ids = webdriver.find_element_by_xpath('//*[@id="angularContainer"]/div[3]/div[1]/div/div/div[1]/table/tbody/tr[1]/td[1]')
 
+table = webdriver.find_element_by_class_name('metric-table')
+rows = table.find_elements_by_tag_name('tr')
+
+
+contact_ids = []
+
+
+for row in range(rows):
+    cells = webdriver.find_element_by_xpath("//table/tbody/tr["+str(row)+"]/td[1]").text()
+    contact_ids.append(cells)
+    with open("contact_ids.txt", "a") as myfile:
+        myfile.write(contact_ids[row])
+        myfile.write("\n")
