@@ -1,8 +1,8 @@
 from instapy import InstaPy
 from instapy import smart_run
 
-insta_user = '+923124294804'
-insta_pass = '!nfluencerhunter'
+insta_user = ''
+insta_pass = ''
 
 session = InstaPy(
     username=insta_user,
