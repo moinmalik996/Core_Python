@@ -4,6 +4,14 @@ You need two packages to run the code.
 1. Selenium - using the command  [ pip install selenium==4.0.0.a7  ]
 2. WebDriver Manager - Automatically include the desired Webdriver for any browser  [ pip install webdriver-manager ]
 
+What This Program does ?
+
+-> Login to Instagram
+-> Write a query in the search box
+-> Extract all the suggestions as IDs and Tags
+-> Store them in a List
+-> Then print the list
+
 """
 
 from selenium import webdriver
