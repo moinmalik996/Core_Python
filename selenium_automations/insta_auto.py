@@ -27,10 +27,10 @@ auto_suggestions_locator = "div.drKGC > div > a"
 
 
 username = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, username_locator)))
-username.send_keys("influencerhunter996")
+username.send_keys("your_username")
 
 password = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, password_locator)))
-password.send_keys("!nfluencerhunter")
+password.send_keys("your_password")
 
 login = driver.find_element(By.CSS_SELECTOR, login_locator)
 login.click()
