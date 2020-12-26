@@ -20,6 +20,27 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 
+# For CSV File Operations
+import csv
+from os import path
+
+
+#
+def extract_data(file_func, field_names_func, data):
+    file_exist = path.exists(r'C:\Users\moinm\PycharmProjects\Core_Python\selenium_automations\Boxing.csv')
+    if file_exist:
+        with open(file_func, 'a', newline='') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
+            file_writer.writerow(data)
+            myfile.close()
+    else:
+        with open(file_func, 'w', newline='') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
+            file_writer.writeheader()
+            file_writer.writerow(data)
+            myfile.close()
+
+
 driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.maximize_window()
 driver.get('https://instagram.com')
@@ -31,7 +52,7 @@ login_locator = "#loginForm > div > div:nth-child(3) > button"
 notnow_locator = "#react-root > section > main > div > div > div > div > button"
 notnow_locator_2 = "body > div.RnEpo.Yx5HN > div > div > div > div.mt3GC > button.aOOlW.HoLwm"
 search_locator = "input[placeholder='Search']"
-auto_suggestions_locator = "div.drKGC > div > a"
+ag_locator = "div.drKGC > div > a"
 
 name_locator = "//h2"
 posts_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[1]/span/span"
@@ -56,12 +77,9 @@ not_now_2.click()
 search = Wait(driver, 4).until(EC.presence_of_element_located((By.CSS_SELECTOR, search_locator)))
 search.send_keys("boxing")
 
-auto_suggestions = Wait(driver, 4).until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR, auto_suggestions_locator)))
+auto_suggestions = Wait(driver, 4).until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR, ag_locator)))
 
 print("\nTotal Suggestions are  :  ", len(auto_suggestions), "\n")
-
-explore = []
-IDs = []
 
 # Extracting IDs and Hashtags Separately
 for sugg in auto_suggestions:
@@ -77,12 +95,18 @@ for sugg in auto_suggestions:
         posts = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, posts_locator)))
         followers = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, followers_locator)))
         following = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, following_locator)))
-        print("\n")
-        print(name.text)
-        print(posts.text)
-        print(followers.text)
-        print(following.text)
-        print("\n")
+
+        file = r"C:\Users\moinm\PycharmProjects\Core_Python\selenium_automations\Boxing.csv"
+        field_names = ['NAME', 'POSTS', 'FOLLOWERS', 'FOLLOWING']
+        my_dict = {
+            'NAME': name.text,
+            'POSTS': posts.text,
+            'FOLLOWERS': followers.text,
+            'FOLLOWING': following.text
+        }
+
+        extract_data(file, field_names, my_dict)
+
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
 
