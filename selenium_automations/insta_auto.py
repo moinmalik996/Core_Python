@@ -33,12 +33,16 @@ notnow_locator_2 = "body > div.RnEpo.Yx5HN > div > div > div > div.mt3GC > butto
 search_locator = "input[placeholder='Search']"
 auto_suggestions_locator = "div.drKGC > div > a"
 
+name_locator = "//h2"
+posts_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[1]/span/span"
+followers_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[2]/a/span"
+following_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[3]/a/span"
 
 username = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, username_locator)))
-username.send_keys("your_username")
+username.send_keys("influencerhunter996")
 
 password = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, password_locator)))
-password.send_keys("your_password")
+password.send_keys("!nfluencerhunter")
 
 login = driver.find_element(By.CSS_SELECTOR, login_locator)
 login.click()
@@ -54,7 +58,6 @@ search.send_keys("boxing")
 
 auto_suggestions = Wait(driver, 4).until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR, auto_suggestions_locator)))
 
-
 print("\nTotal Suggestions are  :  ", len(auto_suggestions), "\n")
 
 explore = []
@@ -62,21 +65,38 @@ IDs = []
 
 # Extracting IDs and Hashtags Separately
 for sugg in auto_suggestions:
-    item = sugg.get_attribute('href')
     term = "explore"
-    if term in item:
-        explore.append(item)
-    else:
-        IDs.append(item)
+    link = sugg.get_attribute('href')
 
-# Printing Explore URLS and Id URLS
-print("\nExplore URLs are  :  ")
-for exp in explore:
-    print(exp)
-print("\n\nID URLs are       :  ")
-for ids in IDs:
-    print(ids)
+    if term not in link:
+        driver.execute_script("window.open('')")
+        driver.switch_to.window(driver.window_handles[1])
+        driver.get(link)
 
+        name = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, name_locator)))
+        posts = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, posts_locator)))
+        followers = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, followers_locator)))
+        following = Wait(driver, 10).until(EC.presence_of_element_located((By.XPATH, following_locator)))
+        print("\n")
+        print(name.text)
+        print(posts.text)
+        print(followers.text)
+        print(following.text)
+        print("\n")
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
 
-
-
+#     item = sugg.get_attribute('href')
+#     term = "explore"
+#     if term in item:
+#         explore.append(item)
+#     else:
+#         IDs.append(item)
+#
+# # Printing Explore URLS and Id URLS
+# print("\nExplore URLs are  :  ")
+# for exp in explore:
+#     print(exp)
+# print("\n\nID URLs are       :  ")
+# for ids in IDs:
+#     print(ids)
