@@ -15,7 +15,7 @@ What This Program does ?
 """
 
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -41,9 +41,15 @@ def extract_data(file_func, field_names_func, data):
             myfile.close()
 
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+headless1 = webdriver.FirefoxOptions()
+headless1.headless = True
+driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=headless1)
 driver.maximize_window()
 driver.get('https://instagram.com')
+print(driver.title)
+print('Headless Browser Started')
+
+locator_wait = 5
 
 # Elements Locators
 username_locator = "username"
@@ -59,25 +65,25 @@ posts_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[1]/
 followers_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[2]/a/span"
 following_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[3]/a/span"
 
-username = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, username_locator)))
+username = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.NAME, username_locator)))
 username.send_keys("influencerhunter996")
 
-password = Wait(driver, 4).until(EC.presence_of_element_located((By.NAME, password_locator)))
+password = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.NAME, password_locator)))
 password.send_keys("!nfluencerhunter")
 
 login = driver.find_element(By.CSS_SELECTOR, login_locator)
 login.click()
 
-not_now = Wait(driver, 4).until(EC.presence_of_element_located((By.CSS_SELECTOR, notnow_locator)))
+not_now = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.CSS_SELECTOR, notnow_locator)))
 not_now.click()
 
-not_now_2 = Wait(driver, 4).until(EC.presence_of_element_located((By.CSS_SELECTOR, notnow_locator_2)))
+not_now_2 = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.CSS_SELECTOR, notnow_locator_2)))
 not_now_2.click()
 
-search = Wait(driver, 4).until(EC.presence_of_element_located((By.CSS_SELECTOR, search_locator)))
+search = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.CSS_SELECTOR, search_locator)))
 search.send_keys("boxing")
 
-auto_suggestions = Wait(driver, 4).until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR, ag_locator)))
+auto_suggestions = Wait(driver, locator_wait).until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR, ag_locator)))
 
 print("\nTotal Suggestions are  :  ", len(auto_suggestions), "\n")
 
