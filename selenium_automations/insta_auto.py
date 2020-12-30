@@ -66,10 +66,10 @@ followers_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li
 following_locator = "//*[@id='react-root']/section/main/div/header/section/ul/li[3]/a/span"
 
 username = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.NAME, username_locator)))
-username.send_keys("influencerhunter996")
+username.send_keys("")
 
 password = Wait(driver, locator_wait).until(EC.presence_of_element_located((By.NAME, password_locator)))
-password.send_keys("!nfluencerhunter")
+password.send_keys("")
 
 login = driver.find_element(By.CSS_SELECTOR, login_locator)
 login.click()
