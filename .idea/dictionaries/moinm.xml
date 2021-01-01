@@ -3,12 +3,14 @@
     <words>
       <w>datepicker</w>
       <w>dirpath</w>
+      <w>followees</w>
       <w>fromtimestamp</w>
       <w>getcwd</w>
       <w>hamza</w>
       <w>hamzamalik</w>
       <w>influencerhunter</w>
       <w>influencers</w>
+      <w>instaloader</w>
       <w>junaid</w>
       <w>makedirs</w>
       <w>modtime</w>
@@ -36,6 +38,7 @@
       <w>varialbles</w>
       <w>webdriver</w>
       <w>yaqoob</w>
+      <w>yasir</w>
     </words>
   </dictionary>
 </component>
