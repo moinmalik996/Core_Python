@@ -43,8 +43,8 @@ def extract_data(file_func, field_names_func, data):
 
 
 # Login Credentials
-login_id = 'influencerhunter996'
-login_pass = '!nfluencerhunter'
+login_id = ''
+login_pass = ''
 
 # Enter something you want to search in IG Search Bar
 search_term = input("Enter a Niche you want to Search   :   ")
