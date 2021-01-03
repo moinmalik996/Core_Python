@@ -15,7 +15,7 @@ What This Program does ?
 """
 
 from selenium import webdriver
-from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
@@ -28,7 +28,7 @@ from os import path
 
 
 def extract_data(file_func, field_names_func, data):
-    file_exist = path.exists(r'C:\Users\moinm\PycharmProjects\Core_Python\selenium_automations\Boxing.csv')
+    file_exist = path.exists("Boxing.csv")
     if file_exist:
         with open(file_func, 'a', newline='') as myfile:
             file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
@@ -43,15 +43,15 @@ def extract_data(file_func, field_names_func, data):
 
 
 # Login Credentials
-login_id = ''
-login_pass = ''
+login_id = 'influencerhunter996'
+login_pass = '!nfluencerhunter'
 
 # Enter something you want to search in IG Search Bar
 search_term = input("Enter a Niche you want to Search   :   ")
 
-headless1 = webdriver.FirefoxOptions()
-headless1.headless = True
-driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+# headless1 = webdriver.FirefoxOptions()
+# headless1.headless = True
+driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.maximize_window()
 driver.get('https://instagram.com')
 print(driver.title, " Session Started")
@@ -118,7 +118,7 @@ for sugg in auto_suggestions:
 
         engagement_rate = float(total_num_likes + total_num_comments) / (followers * total_num_posts)
 
-        file = r"C:\Users\moinm\PycharmProjects\Core_Python\selenium_automations\Boxing.csv"
+        file = "boxing.csv"
         field_names = ['NAME', 'POSTS', 'FOLLOWERS', 'FOLLOWING', 'Engagement_Rate']
         my_dict = {
             'NAME': suggestion,
