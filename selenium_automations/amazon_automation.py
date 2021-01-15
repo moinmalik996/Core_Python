@@ -55,7 +55,7 @@ driver.get(catagory_url[catagory_no - 1])
 sub_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
 
 def extract_data(file_func, field_names_func, data):
-    file_exist = path.exists("Selenium_Automations\\"+current_catagory[catagory_no-1]+".csv")
+    file_exist = path.exists(current_catagory[catagory_no-1]+".csv")
     if file_exist:
         with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
             file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
@@ -99,7 +99,7 @@ for catagory in sub_catagories:
         prc_name = price.text
         link_url = links.get_attribute("href")
         
-        file = "Selenium_Automations\\"+current_catagory[catagory_no-1]+".csv"
+        file = current_catagory[catagory_no-1]+".csv"
         field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
         
         my_dict = {
@@ -135,7 +135,7 @@ for catagory in sub_catagories:
         prc_name = price.text
         link_url = links.get_attribute("href")
         
-        file = "Selenium_Automations\\"+current_catagory[catagory_no-1]+".csv"
+        file = current_catagory[catagory_no-1]+".csv"
         field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
         
         my_dict = {
@@ -146,8 +146,7 @@ for catagory in sub_catagories:
             "SUBCATAGORY" : sub_catagory_name
         }
         
-        extract_data(file, field_names, my_dict)           
-                 
+        extract_data(file, field_names, my_dict)                            
     
     sleep(5)
     
