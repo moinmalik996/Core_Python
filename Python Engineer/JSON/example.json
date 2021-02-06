@@ -1,0 +1,11 @@
+{
+    "name": "Moin",
+    "age": 65,
+    "City": "New York",
+    "hasChildren": true,
+    "titles": [
+        "Malik",
+        "Chaudry",
+        "Rana"
+    ]
+}

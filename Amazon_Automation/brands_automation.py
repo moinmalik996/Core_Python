@@ -16,7 +16,7 @@ driver.maximize_window()
 driver.get('https://amazon.co.uk')
 print(driver.title, " Session Started")
 
-t = 5
+t = 10
 
 location_locator = "//a[@id='nav-global-location-popover-link']"
 postcode_locator = "//input[@class='GLUX_Full_Width a-declarative']"
@@ -24,7 +24,6 @@ apply_locator = "//span[@id='GLUXZipUpdate']"
 
 uk_postcode = "WC2N 5DU"
 sub_catagories_loc = 'ul > Ul > li > a'
-
 
  # Enter UK Postcode
 location = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, location_locator))).click()
@@ -75,81 +74,48 @@ for catagory in sub_catagories:
     driver.switch_to.window(driver.window_handles[1])
     driver.get(cat_url)
     
-    product_name_loc = "#zg-ordered-list > li > span > div > span > a > div"
-    product_reviews_loc = "#zg-ordered-list > li > span > div > span > div.a-icon-row.a-spacing-none > a.a-size-small.a-link-normal"
-    price_loc = "#zg-ordered-list > li > span > div > span > div.a-row > a > span"
+    
     product_links_loc = "span.zg-item > a"
     
-    print("Current URL is  :  ", cat_url)
+    print("Current Category URL is  :  ", cat_url)
     
     ignored_except = (NoSuchElementException, StaleElementReferenceException)
     
-    product_name    = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_name_loc)))
-    product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
-    product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
     product_links   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_links_loc)))
     
-    products_per_page = len(product_name)
+    products_per_page = len(product_links)
     print("\nProducts found on this page", products_per_page)
     total_crawled_products += products_per_page
     
-    for (product, review, price, links) in zip(product_name, product_reviews, product_price, product_links):  
-        prt_name = product.text
-        rvw = review.text
-        prc_name = price.text
-        prc_name = prc_name.replace('£', '')
-        link_url = links.get_attribute("href")
+    for product in product_links:  
+        product_url = product.get_attribute("href")
+        driver.execute_script("window.open()")
+        driver.switch_to.window(driver.window_handles[2])
+        driver.get(product_url)
         
-        file = current_catagory[catagory_no-1]+".csv"
-        field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
+        seller_profile_id_loc = "sellerProfileTriggerId"
+        seller_profile_id = Wait(driver, t).until(EC.presence_of_element_located((By.ID, seller_profile_id_loc))).click()
         
-        my_dict = {
-            "NAME" : prt_name,
-            "PRODUCT URL": link_url,
-            "PRICE RANGE" : prc_name,
-            "REVIEWS" : rvw,
-            "SUBCATAGORY" : sub_catagory_name
-        }
+        business_name_loc        = "//*[@id='seller-profile-container']/div[2]/div/ul/li[1]/span"
+        business_type_loc        = "//*[@id='seller-profile-container']/div[2]/div/ul/li[2]/span"
+        trade_register_no_loc    = "//*[@id='seller-profile-container']/div[2]/div/ul/li[3]/span"
+        vat_number_loc           = "//*[@id='seller-profile-container']/div[2]/div/ul/li[4]/span"
+        business_address_loc     = "//*[@id='seller-profile-container']/div[2]/div/ul/li[5]/span/ul/li"
         
-        extract_data(file, field_names, my_dict)
-
-    page_2 = Wait(driver, t).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'li.a-last > a'))).click()
+        business_name     = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, business_name_loc)))
+        business_type     = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, business_type_loc)))
+        trade_register_no = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, trade_register_no_loc)))
+        vat_number        = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, vat_number_loc)))
+        business_address  = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, business_address_loc)))
         
-    product_name_loc = "#zg-ordered-list > li > span > div > span > a > div"
-    product_reviews_loc = "#zg-ordered-list > li > span > div > span > div.a-icon-row.a-spacing-none > a.a-size-small.a-link-normal"
-    price_loc = "#zg-ordered-list > li > span > div > span > div.a-row > a > span"
-    product_links_loc = "span.zg-item > a"
+        for address in business_address:
+            print(address.text)
         
-    product_name    = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_name_loc)))
-    product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
-    product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
-    product_links   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_links_loc)))
+        
+        driver.close()
+        driver.switch_to.window(driver.window_handles[1])
+        
     
-    
-    products_per_page = len(product_name)
-    print("\nProducts found on this page 2 :", products_per_page)
-    total_crawled_products += products_per_page
-    
-    for (product, review, price, links) in zip(product_name, product_reviews, product_price, product_links):  
-        prt_name = product.text
-        rvw = review.text
-        prc_name = price.text
-        prc_name = prc_name.replace('£', '')
-        link_url = links.get_attribute("href")        
-        file = current_catagory[catagory_no-1]+".csv"
-        field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
-        
-        my_dict = {
-            "NAME" : prt_name,
-            "PRODUCT URL": link_url,
-            "PRICE RANGE" : prc_name,
-            "REVIEWS" : rvw,
-            "SUBCATAGORY" : sub_catagory_name
-        }
-        
-        extract_data(file, field_names, my_dict)                            
-    
-    sleep(5)
     
     driver.close()
     driver.switch_to.window(driver.window_handles[0])
