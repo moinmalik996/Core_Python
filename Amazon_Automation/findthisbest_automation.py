@@ -16,7 +16,7 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.maximize_window()
 
 # Time
-t = 10
+t = 5
 
 for page in range(1, 10):
     
@@ -40,14 +40,25 @@ for page in range(1, 10):
         business_address_loc  = "//span[text()='Business Address']/following::span"
         contacts_loc          = "//span[text()='Contacts']/following::span"
         
-        seller_name          = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_name_loc))).text
-        seller_store_link    = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc))).get_attribute("href")
-        company_name         = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, company_name_loc))).text
+        try:
+            seller_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_name_loc))).text
+        except:
+            seller_name = "No Name"
+            
+        try:
+            seller_store_link = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc))).get_attribute("href")
+        except:
+            seller_store_link = "No Link"
         
         try:
-            contacts         = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, contacts_loc))).text
+            company_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, company_name_loc))).text
+        except:
+            company_name = "No Company Name"
+            
+        try:
+            contacts = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, contacts_loc))).text
         except TimeoutException:
-            contacts    = 0
+            contacts = 0
             
         try:
             business_address = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, business_address_loc))).text
