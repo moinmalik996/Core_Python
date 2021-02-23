@@ -40,30 +40,25 @@ for page in range(1, 10):
         business_address_loc  = "//span[text()='Business Address']/following::span"
         contacts_loc          = "//span[text()='Contacts']/following::span"
         
-        try:
-            seller_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_name_loc))).text
-        except:
-            seller_name = "No Name"
+        def myfunc(locator, exception_value):
+            try:
+                location = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, locator))).text
+                return location
+            except:
+                return exception_value
+            
+            
+        
+        
+        seller_name      = myfunc(seller_name_loc, "No Name")
+        company_name     = myfunc(company_name_loc, "No Company Name")
+        contacts         = myfunc(contacts_loc, 0)
+        business_address = myfunc(business_address_loc, "No Business Address")
             
         try:
             seller_store_link = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc))).get_attribute("href")
         except:
             seller_store_link = "No Link"
-        
-        try:
-            company_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, company_name_loc))).text
-        except:
-            company_name = "No Company Name"
-            
-        try:
-            contacts = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, contacts_loc))).text
-        except TimeoutException:
-            contacts = 0
-            
-        try:
-            business_address = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, business_address_loc))).text
-        except:
-            business_address = "No Business Address"
         
         
         def extract_data(file_func, field_names_func, data):

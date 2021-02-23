@@ -3,7 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from time import sleep
 
 
@@ -56,7 +56,7 @@ driver.get(catagory_url[catagory_no - 1])
 sub_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
 
 def extract_data(file_func, field_names_func, data):
-    file_exist = path.exists(current_catagory[catagory_no-1]+".csv")
+    file_exist = path.exists("Product_Sheets/" + current_catagory[catagory_no-1] + ".csv")
     if file_exist:
         with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
             file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
@@ -83,12 +83,16 @@ for catagory in sub_catagories:
     
     print("Current URL is  :  ", cat_url)
     
-    ignored_except = (NoSuchElementException, StaleElementReferenceException)
-    
     product_name    = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_name_loc)))
-    product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
-    product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
     product_links   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_links_loc)))
+    
+    try:
+        product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
+        product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
+    except:
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+        
     
     products_per_page = len(product_name)
     print("\nProducts found on this page", products_per_page)
@@ -101,7 +105,7 @@ for catagory in sub_catagories:
         prc_name = prc_name.replace('£', '')
         link_url = links.get_attribute("href")
         
-        file = current_catagory[catagory_no-1]+".csv"
+        file = "Product_Sheets/" + current_catagory[catagory_no-1] + ".csv"
         field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
         
         my_dict = {
@@ -122,9 +126,14 @@ for catagory in sub_catagories:
     product_links_loc = "span.zg-item > a"
         
     product_name    = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_name_loc)))
-    product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
-    product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
     product_links   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_links_loc)))
+    
+    try:
+        product_reviews = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, product_reviews_loc)))
+        product_price   = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, price_loc)))
+    except:
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
     
     
     products_per_page = len(product_name)

@@ -8,7 +8,7 @@ from time import sleep
 import string
 
 import csv
-from os import path
+from os import path, removedirs
 
 mylist = ["uk.", "ca.", ""]
 choose = int(input("Input 0 for UK 1 for CA and 2 for America :  "))
@@ -71,35 +71,37 @@ for i in string.ascii_lowercase:
             company_name_loc      = "//span[text()='Company']/following::span"
             business_address_loc  = "//span[text()='Business Address']/following::span"
             contacts_loc          = "//span[text()='Contacts']/following::span"
+            business_country_loc  = "//span[text()='Business Country']/following::div"
+            reviews_loc           = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/span[2]"
+            
+            def remove(mychar):
+                remove_char = "()reviews"
+                for char in remove_char:
+                    mychar = mychar.replace(char, "").strip()
+                return mychar
                 
-            try:
-                seller_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_name_loc))).text
-            except:
-                seller_name = "No Name"
-                    
+            def myfunc(locator, exception_value):
+                try:
+                    location = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, locator))).text
+                    return location
+                except:
+                    return exception_value    
+        
+            seller_name      = myfunc(seller_name_loc, "No Name")
+            company_name     = myfunc(company_name_loc, "No Company Name")    
+            business_address = myfunc(business_address_loc, "No Business Address")
+            business_country = myfunc(business_country_loc, "No Business Country")
+            reviews          = myfunc(reviews_loc, 0)
+            reviews          = remove(reviews)
+            contacts         = myfunc(contacts_loc, 0)
+            
             try:
                 seller_store_link = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc))).get_attribute("href")
             except:
                 seller_store_link = "No Link"
                 
-            try:
-                company_name = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, company_name_loc))).text
-            except:
-                company_name = "No Company Name"
-                    
-            try:
-                contacts = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, contacts_loc))).text
-            except TimeoutException:
-                contacts = 0
-                    
-            try:
-                business_address = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, business_address_loc))).text
-            except:
-                business_address = "No Business Address"
-                
-                
             def extract_data(file_func, field_names_func, data):
-                file_exist = path.exists("Sellers_" + mylist[choose] + ".csv")
+                file_exist = path.exists("Sellers_" + current_category[category_no - 1] + ".csv")
                 if file_exist:
                     with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
                         file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
@@ -112,14 +114,16 @@ for i in string.ascii_lowercase:
                         file_writer.writerow(data)
                         myfile.close()
                             
-            file = "Sellers_" + mylist[choose] + ".csv"
-            field_names = ["BRAND_NAME", "STORE_URL", "COMPANY_NAME", "BUSINESS_ADDRESS", "CONTACT"]
+            file = "Sellers_" + current_category[category_no - 1] + ".csv"
+            field_names = ["BRAND_NAME", "STORE_URL", "COMPANY_NAME", "COUNTRY", "BUSINESS_ADDRESS", "REVIEWS", "CONTACT"]
                 
             my_dict = {
                 "BRAND_NAME"        : seller_name,
                 "STORE_URL"         : seller_store_link,
                 "COMPANY_NAME"      : company_name,
+                "COUNTRY"           : business_country,
                 "BUSINESS_ADDRESS"  : business_address,
+                "REVIEWS"           : reviews,
                 "CONTACT"           : contacts
             }
                             
