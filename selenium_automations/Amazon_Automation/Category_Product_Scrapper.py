@@ -1,3 +1,10 @@
+"""  
+Commands to install these packages.
+
+pip install selenium==4.0.0.b1
+pip install webdriver-manager
+     
+"""
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
