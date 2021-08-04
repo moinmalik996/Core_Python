@@ -1,10 +1,12 @@
 """  
 Commands to install these packages.
 
+
 pip install selenium==4.0.0.b1
 pip install webdriver-manager
      
 """
+
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
@@ -25,7 +27,7 @@ driver.get('https://amazon.co.uk')
 print(driver.title, " Session Started")
 
 t = 5
-
+cookie_acceptor_loc = "//input[@name='accept']"
 location_locator = "//a[@id='nav-global-location-popover-link']"
 postcode_locator = "//input[@class='GLUX_Full_Width a-declarative']"
 apply_locator = "//span[@id='GLUXZipUpdate']"
@@ -34,7 +36,12 @@ uk_postcode = "WC2N 5DU"
 sub_catagories_loc = 'ul > Ul > li > a'
 
 
- # Enter UK Postcode
+# Enter UK Postcode
+try:
+    cookie_acceptor = Wait(driver, t ).until(EC.presence_of_element_located((By.XPATH, cookie_acceptor_loc))).click()
+except:
+    pass
+
 location = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, location_locator))).click()
 postcode = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, postcode_locator))).send_keys(uk_postcode)
 apply    = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, apply_locator))).click()
