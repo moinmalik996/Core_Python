@@ -76,9 +76,9 @@ for page_no in range(1, pages_scrap+1):
     driver.get(current_url + '&_pgn=' + str(page_no))
 
     #Product_item_locators 
-    title_loc          = "//*[@id='srp-river-results']/ul/li/div/div/a/h3"
-    item_condition_loc = "//*[@id='srp-river-results']/ul/li/div/div/div/span[text()='Brand new']"
-    price_loc          = "//*[@id='srp-river-results']/ul/li/div/div[2]/div[3]/div[1]/span"
+    title_loc          = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/a/h3[@class='s-item__title']"
+    item_condition_loc = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/div[@class='s-item__subtitle']/span[@class='SECONDARY_INFO']"
+    price_loc          = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/div[@class='s-item__details clearfix']/div/span[@class='s-item__price']"
     sold_watchers_loc  = "//span[@class='BOLD NEGATIVE']"
 
 
@@ -111,6 +111,11 @@ for page_no in range(1, pages_scrap+1):
     
     print()
     print("Page-" + str(page_no) + " Scrapped.\n")
+
+    title_loc          = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/a/h3[@class='s-item__title']"
+    item_condition_loc = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/div[@class='s-item__subtitle']/span[@class='SECONDARY_INFO']"
+    price_loc          = "//span[@class='BOLD NEGATIVE']//ancestor::div[@class='s-item__info clearfix']/div[@class='s-item__details clearfix']/div/span[@class='s-item__price']"
+    sold_watchers_loc  = "//span[@class='BOLD NEGATIVE']"
 
 sleep(5)
 

@@ -19,7 +19,7 @@ driver.maximize_window()
 
 # Time
 t = 2
-    
+
 driver.get('https://' + mylist[choose] + 'findthisbest.com/sellers/amazon')
 print(driver.title, " Session Started")
 
@@ -68,15 +68,16 @@ for k in range(pages):
             
         #Locators
         seller_name_loc       = "//h1"
-        seller_store_link_loc = "//*[@id='content']/div[2]/div/div[1]/div/div/div[2]/div[1]/a"
+        seller_store_link_loc = "//*[@id='content']/div/div/div/div/div/div/div/a"
         company_name_loc      = "//span[text()='Company']/following::span"
         business_address_loc  = "//span[text()='Business Address']/following::span"
         contacts_loc          = "//span[text()='Contacts']/following::span"
         business_country_loc  = "//span[text()='Business Country']/following::div"
-        reviews_loc           = "//*[@id='content']/div[2]/div/div[1]/div/div/div[1]/div/span[2]"
+        reviews_loc           = "//*[@id='content']/div[1]/div/div[1]/div/div/div[1]/div/span[2]"
+        rating_loc            = "//*[@id='content']/div[1]/div/div[1]/div/div/div[1]/div/span[1]"
         
         def remove(mychar):
-            remove_char = "()reviews"
+            remove_char = "()ratings"
             for char in remove_char:
                 mychar = mychar.replace(char, "").strip()
             return mychar
@@ -92,12 +93,14 @@ for k in range(pages):
         company_name     = myfunc(company_name_loc, "No Company Name")    
         business_address = myfunc(business_address_loc, "No Business Address")
         business_country = myfunc(business_country_loc, "No Business Country")
-        reviews          = myfunc(reviews_loc, 0)
+        reviews          = myfunc(reviews_loc, "-")
+        ratings          = myfunc(rating_loc, "-")
         reviews          = remove(reviews)
-        contacts         = myfunc(contacts_loc, 0)
+        contacts         = myfunc(contacts_loc, "-")
         
         try:
-            seller_store_link = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc))).get_attribute("href")
+            seller_store_link = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, seller_store_link_loc)))
+            seller_store_link = seller_store_link.get_attribute('href')
         except:
             seller_store_link = "No Link"
             
@@ -116,7 +119,7 @@ for k in range(pages):
                     myfile.close()
                         
         file = "Sellers_" + current_category[category_no - 1] + ".csv"
-        field_names = ["BRAND_NAME", "STORE_URL", "COMPANY_NAME", "COUNTRY", "BUSINESS_ADDRESS", "REVIEWS", "CONTACT"]
+        field_names = ["BRAND_NAME", "STORE_URL", "COMPANY_NAME", "COUNTRY", "BUSINESS_ADDRESS", "REVIEWS", "RATINGS", "CONTACT"]
             
         my_dict = {
             "BRAND_NAME"        : seller_name,
@@ -125,6 +128,7 @@ for k in range(pages):
             "COUNTRY"           : business_country,
             "BUSINESS_ADDRESS"  : business_address,
             "REVIEWS"           : reviews,
+            "RATINGS"           : ratings,
             "CONTACT"           : contacts
         }
                         
