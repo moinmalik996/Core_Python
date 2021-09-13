@@ -4,7 +4,7 @@ Commands to install these packages.
 
 pip install selenium==4.0.0.b1
 pip install webdriver-manager
-     
+
 """
 
 from selenium import webdriver
@@ -21,9 +21,11 @@ from os import path
 
 total_crawled_products = 0
 
+# website = input("Enter website Address")
+
 driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.maximize_window()
-driver.get('https://amazon.co.uk')
+driver.get('https://amazon.com')
 print(driver.title, " Session Started")
 
 t = 5
@@ -32,7 +34,7 @@ location_locator = "//a[@id='nav-global-location-popover-link']"
 postcode_locator = "//input[@class='GLUX_Full_Width a-declarative']"
 apply_locator = "//span[@id='GLUXZipUpdate']"
 
-uk_postcode = "WC2N 5DU"
+postcode = "10001"
 sub_catagories_loc = 'ul > Ul > li > a'
 
 
@@ -43,12 +45,12 @@ except:
     pass
 
 location = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, location_locator))).click()
-postcode = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, postcode_locator))).send_keys(uk_postcode)
+postcode = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, postcode_locator))).send_keys(postcode)
 apply    = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, apply_locator))).click()
 
 # Go to Best Sellers
 sleep(5)
-driver.get('https://www.amazon.co.uk/gp/bestsellers/?ref_=nav_cs_bestsellers')
+driver.get('https://www.amazon.com/gp/bestsellers/')
 main_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
 no_of_catagories = len(main_catagories)
 
@@ -70,7 +72,7 @@ driver.get(catagory_url[catagory_no - 1])
 sub_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
 
 def extract_data(file_func, field_names_func, data):
-    file_exist = path.exists("Product_Sheets/" + current_catagory[catagory_no-1] + ".csv")
+    file_exist = path.exists(current_catagory[catagory_no-1] + ".csv")
     if file_exist:
         with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
             file_writer = csv.DictWriter(myfile, fieldnames=field_names_func)
@@ -119,7 +121,7 @@ for catagory in sub_catagories:
         prc_name = prc_name.replace('£', '')
         link_url = links.get_attribute("href")
         
-        file = "Product_Sheets/" + current_catagory[catagory_no-1] + ".csv"
+        file = current_catagory[catagory_no-1] + ".csv"
         field_names = ["NAME", "PRODUCT URL", "PRICE RANGE", "REVIEWS", "SUBCATAGORY"]
         
         my_dict = {
