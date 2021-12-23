@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Django</title>
+    <style>
+        body{
+            background-color: lightgray;
+        }
+
+        h1 {
+            color: lightseagreen;
+        }
+
+        .myclass {
+            background-color: lightslategray;
+            width: 100%;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>Name : </h1>
+            <h2>{{c_name}}</h2>
+        </div>
+        <div>
+            <h1>Duration : </h1>
+            <h2>{{c_duration}}</h2>
+        </div>
+        <div>
+            <h1>Seats : </h1>
+            <h2>{{c_seats}}</h2>
+        </div>
+    </div>
+    <div class="myclass">
+        <h1>{{title}}</h1>
+    </div>
+</body>
+</html>

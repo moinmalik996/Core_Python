@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Django Filters</title>
+    <style>
+        body{
+            background-color: lightgray;
+            margin: 0;
+        }
+
+        h1 {
+            color: rgb(0, 0, 0);
+        }
+
+        .myclass {
+            background-color: lightslategray;
+            width: 100%;
+            text-align: center;
+            padding-bottom: 50%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="myclass">
+        <h1>{{title|default:'Nothing'}}</h1>
+        <h1>{{title|length}}</h1>
+        <h1>{{title|slice:'2'|upper}}</h1>
+        <h1>{{title|truncatechars:'4'}}</h1>
+        <h1>{{title|truncatewords:'2'}}</h1>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<h, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th {
+            background-color: lightslategray;
+            padding: 20px;
+        }
+
+        td {
+            background-color: peru;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Page</h1>
+    {% if stu_data %}
+    <p>Here is your Data</p>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        <tr>
+            <td>{{ stu_data.id }}</td>
+            <td>{{ stu_data.stu_id }}</td>
+            <td>{{ stu_data.stu_name }}</td>
+            <td>{{ stu_data.stu_email }}</td>
+            <td>{{ stu_data.stu_pass }}</td>
+        </tr>
+    </table>
+
+    {% else %}
+    <p>No Data</p>
+    {% endif %}
+</body>
+</html>

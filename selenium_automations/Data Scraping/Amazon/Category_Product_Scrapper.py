@@ -35,12 +35,12 @@ postcode_locator = "//input[@class='GLUX_Full_Width a-declarative']"
 apply_locator = "//span[@id='GLUXZipUpdate']"
 
 postcode = "10001"
-sub_catagories_loc = 'ul > Ul > li > a'
+main_catagories_loc = '/html/body/div/div/div/div/div/div/div/div/div/div/div/div/div/a'
 
 
 # Enter UK Postcode
 try:
-    cookie_acceptor = Wait(driver, t ).until(EC.presence_of_element_located((By.XPATH, cookie_acceptor_loc))).click()
+    cookie_acceptor = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, cookie_acceptor_loc))).click()
 except:
     pass
 
@@ -51,7 +51,7 @@ apply    = Wait(driver, t).until(EC.presence_of_element_located((By.XPATH, apply
 # Go to Best Sellers
 sleep(5)
 driver.get('https://www.amazon.com/gp/bestsellers/')
-main_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
+main_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, main_catagories_loc)))
 no_of_catagories = len(main_catagories)
 
 catagory_url = []
@@ -69,7 +69,7 @@ print("You Selected ", current_catagory[catagory_no - 1], ".")
 
 driver.get(catagory_url[catagory_no - 1])
 
-sub_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, sub_catagories_loc)))
+sub_catagories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, main_catagories_loc)))
 
 def extract_data(file_func, field_names_func, data):
     file_exist = path.exists(current_catagory[catagory_no-1] + ".csv")
