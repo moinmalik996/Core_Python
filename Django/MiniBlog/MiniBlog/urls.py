@@ -1,7 +1,7 @@
-"""authproj URL Configuration
+"""MiniBlog URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
+    https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -16,14 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
-from innerapp import views
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('signup/', views.sign_up, name='signup'),
-    path('login/', views.login_form, name='login'),
-    path('profile/', views.get_dashBoard, name='dashBoard'),
-    path('logout/', views.log_out, name='logout'),
-    path('changePass/', views.user_change_pass, name='changePass')
 ]

@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.models import Group
 # Create your views here.
 
 
@@ -11,11 +12,13 @@ def sign_up(request):
     if request.method == 'POST':
         fm = UserCreationForm(request.POST)
         if fm.is_valid():
-            fm.save()
+            user = fm.save()
+            group = Group.objects.get(name='Editor')
+            user.groups.add(group)
         
     else:
         fm = UserCreationForm()
-    return render(request, 'enroll/signup.html', {'form':fm})
+    return render(request, 'innerapp/signup.html', {'form':fm})
 
 
 def login_form(request):
@@ -30,19 +33,19 @@ def login_form(request):
                 if user is not None:
                     messages.success(request, 'Logged In Successfully')
                     login(request, user)
-                    return HttpResponseRedirect('/profile/')
+                    return HttpResponseRedirect('/dashBoard/')
         else:
             fm = AuthenticationForm()
 
 
-        return render(request, 'enroll/login.html', {'form':fm})
+        return render(request, 'innerapp/login.html', {'form':fm})
     else:
-        return HttpResponseRedirect('/profile/')
+        return HttpResponseRedirect('/dashBoard/')
 
 
-def get_profile(request):
+def get_dashBoard(request):
     if request.user.is_authenticated:
-        return render(request, 'enroll/profile.html', {'name':request.user})
+        return render(request, 'innerapp/dashBoard.html', {'name':request.user})
     else:
         return HttpResponseRedirect('/login/')
 
@@ -54,16 +57,3 @@ def log_out(request):
 
 
 
-def user_change_pass(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            fm = PasswordChangeForm(user=request.user, data=request.POST)
-            if fm.is_valid():
-                fm.save()
-                update_session_auth_hash(request, fm.user)
-                return HttpResponseRedirect('/profile/')
-        else:
-            fm = PasswordChangeForm(user=request.user)
-        return render(request, 'enroll/changePass.html', {'form': fm})
-    else:
-        return HttpResponseRedirect('/login/')
