@@ -16,6 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from blogapp import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home_view),
+    path('aboutus/', views.about_view, name='aboutus'),
+    path('contactus/', views.contact_view, name='contactus'),
+    path('dashboard/', views.dash_view, name='dashboard'),
+    path('signup/', views.user_signup, name='signup'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('addpost/', views.add_post, name='addPost'),
+    path('update/post_<int:id>/edit', views.update_post, name='updatePost'),
+    path('delete/post_<int:id>/delete', views.delete_post, name='deletePost')
 ]
