@@ -11,6 +11,7 @@
     <h1 class="text-center">Student Information</h1>
     <div class="row justify-content-center">
         <div class="col-sm-6 col-offset-3">
+            {% if stu_data %}
             <table class="table">
                 <thead>
                 <tr>
@@ -22,16 +23,22 @@
                 </tr>
                 </thead>
                 <tbody>
+                {% for students in stu_data %}
                 <tr>
-                    <th scope="row">{{student.id}}</th>
-                    <td>{{student.name}}</td>
-                    <td>{{student.city}}</td>
-                    <td>{{student.marks}}</td>
-                    <td>{{student.pass_date}}</td>
+                    <th scope="row">{{students.id}}</th>
+                    <td>{{students.name}}</td>
+                    <td>{{students.city}}</td>
+                    <td>{{students.marks}}</td>
+                    <td>{{students.pass_date}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                No Matching Record Found
+            </div>
+            {% endif %}
         </div>
       </div>
     
