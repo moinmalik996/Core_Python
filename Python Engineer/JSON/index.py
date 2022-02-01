@@ -13,21 +13,22 @@ from os import name
 # # writing into file
 # with open(file_path, 'w') as myfile:
 #     json.dump(person, myfile, indent=4)  # DUMP FOR NOT_STRING
-    
+
 # # reading from file
 # with open(file_path, 'r') as myfile:
 #     person = json.load(myfile)
 #     print(person)
-    
-    
+
+
 class User:
-    
+
     def __init__(self, name, age):
         self.name = name
-        self.age  = age
-        
-        
+        self.age = age
+
+
 user = User("Moin", 23)
+
 
 def encode_user(o):
     if isinstance(o, User):
@@ -37,5 +38,6 @@ def encode_user(o):
 
 
 from json import JSONEncoder
+
 userJSON = json.dumps(user, default=encode_user)
 print(userJSON)
