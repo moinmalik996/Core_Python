@@ -1,0 +1,53 @@
+{% extends 'app/main.html' %}
+{% load widget_tweaks %}
+
+{% block info %}
+<div class="container-fluid">
+    <div class="row" style="margin-top: 50px;">
+        <div class="col-md-4 offset-md-4">
+            <div class="d-grid gap-2">
+                <a class="btn btn-warning" role="button" href="{% url 'studentcreate' %}">Add Student</a>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 100px;">
+        <div class="col-md-10 offset-md-1">
+            {% if students %}
+                
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Father Name</th>
+                            <th scope="col">Roll No.</th>
+                            <th scope="col">Section</th>
+                            <th scope="col">Standard</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">City</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                                <tr>
+                                    <th scope="row">{{student.id}}</th>
+                                    <td>{{student.name}}</td>
+                                    <td>{{student.fathername}}</td>
+                                    <td>{{student.roll}}</td>
+                                    <td>{{student.section}}</td>
+                                    <td>{{student.standard}}</td>
+                                    <td>{{student.age}}</td>
+                                    <td>{{student.city}}</td>
+                                </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                
+            {% else %}
+            <h2 class="text-center">No data here</h2>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock info %}

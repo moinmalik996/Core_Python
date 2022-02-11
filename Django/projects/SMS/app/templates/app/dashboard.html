@@ -1,0 +1,17 @@
+{% extends 'app/main.html' %}
+
+    
+
+{% block info %}
+<div class="d-grid gap-2">
+    {% if request.user.is_authenticated %}
+
+
+    {% else %}
+        <a class="btn btn-primary" role="button" href="{% url 'login'%}">Login</a>
+        <a class="btn btn-primary" role="button" href="{% url 'signup'%}">Sign Up</a>
+    {% endif %}                  
+</div>
+{% endblock info %}
+
+    
