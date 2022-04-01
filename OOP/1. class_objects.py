@@ -1,4 +1,6 @@
 class Mobile():
+    
+    name = 'Moin'
 
     def __init__(self):
         self.model = "Samsung"
@@ -11,3 +13,5 @@ class Mobile():
 
 sam = Mobile()
 sam.show_data(800)
+
+name = print(sam.name)
