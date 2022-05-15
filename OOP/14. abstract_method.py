@@ -11,3 +11,4 @@ obj = Father()
 
 class Son(Father):
     
+    pass
