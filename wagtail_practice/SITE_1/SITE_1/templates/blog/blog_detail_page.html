@@ -1,2 +1,22 @@
 {% extends 'base.html' %}
 {% load wagtailimages_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-top: 100px">
+            <div class="col-lg-4 offset-lg-4">
+                {% image self.image fill-500x500 as img %}
+                <img src='{{img.url}}'>
+            </div>
+        </div><br><br>
+        <div class='row text-center'>
+            <h1 class='text-center'>{{self.title}}</h1><br>
+            <p class="text-center">Authors</p>
+                    {% for item in self.blog_authors.all %}
+                        <li class="text-center">
+                            {{ item.author.name }}
+                        </li>
+                    {% endfor %}
+        </div>
+    </div>
+{% endblock%}

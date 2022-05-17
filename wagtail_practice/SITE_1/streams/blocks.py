@@ -50,7 +50,6 @@ class CardBlock(blocks.StructBlock):
     
     title = blocks.CharBlock(required=True,
                              help_text='Add a Title')
-    
     cards = blocks.ListBlock(
         blocks.StructBlock(
             [
@@ -71,7 +70,7 @@ class CardBlock(blocks.StructBlock):
     class Meta:
         template = 'streams/cards_block.html'
         icon     = 'edit'
-        label    = 'Limited Rich Text Block'
+        label    = 'Card Block'
         
         
 class CTABlock(blocks.StructBlock):
@@ -86,4 +85,34 @@ class CTABlock(blocks.StructBlock):
         template = 'streams/cta_block.html'
         icon     = 'placeholder'
         label    = 'Call To Action'
+
+
+class LinkStructValue(blocks.StructValue):
+    
+    def url(self):
+        btn_page = self.get('button_page')
+        btn_url  = self.get('button_url')
+        
+        if btn_page:
+            return btn_page.url
+        elif btn_url:
+            return btn_url
+        return None     
+ 
+class ButtonBlock(blocks.StructBlock):
+    
+    button_page = blocks.PageChooserBlock(required=False, help_text='If selected this URL will be used first.')
+    button_url  = blocks.URLBlock(required=False, help_text='If selected this URL will be used secondarily to the button page.')
+    
+    class Meta:
+        template = 'streams/button_block.html'
+        icon     = 'edit'
+        label    = 'Button Block'
+        value_class = LinkStructValue
+        
+
+
+        
+        
+
         
