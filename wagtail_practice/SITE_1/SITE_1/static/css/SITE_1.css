@@ -1,0 +1,12 @@
+.blog_tiles {
+    margin-top: 5%;
+    margin-left: 5%;
+    border: 2px solid black;
+    box-shadow: 5px 10px 18px black;
+    transition: all 0.5s;
+}
+
+.blog_tiles:hover {
+    border: 2px solid darkgray;
+    box-shadow: 5px 10px 18px darkgray;
+}

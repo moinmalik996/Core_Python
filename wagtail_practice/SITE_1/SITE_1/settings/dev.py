@@ -13,6 +13,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INSTALLED_APPS = INSTALLED_APPS + [
     "debug_toolbar",
+    'django_extensions',
+    'menus',
+    'contact'
 ]
 
 MIDDLEWARE = MIDDLEWARE + [
@@ -24,6 +27,13 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND' : 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'C:\\Users\\dev\\Desktop\\Moin\\Core_Python\\wagtail_practice\\SITE_1\\cache'
+    }
+}
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h1>{{ self.title}}</h1>
+            <P>
+                {{self.thank_you_text|richtext }}
+            </P>
+        </div>
+    </div>
+</div>
+{% endblock %}

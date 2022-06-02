@@ -1,4 +1,6 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar menu_tags cache %}
+
+{% get_menu 'main' as navigation %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -29,7 +31,7 @@
         {% wagtailuserbar %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">Navbar</a>
+              <a class="navbar-brand" href="/">Wagtail Project</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -37,29 +39,18 @@
               <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                   <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
+                    <a class="nav-link active" href="/">Home
                       <span class="visually-hidden">(current)</span>
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                  </li>
+                  {% cache 604800 navigation %}
+                    {% for item in navigation.menu_items.all %}
+                    
+                      <li class="nav-item">
+                        <a class="nav-link" href="{{ item.link }}"{% if item.open_in_new_tab %} target="_blank" {% endif %}>{{ item.title }}</a>
+                      </li>
+                    {% endfor %}
+                  {% endcache %}
                 </ul>
                 <form class="d-flex">
                   <input class="form-control me-sm-2" type="text" placeholder="Search">

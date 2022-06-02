@@ -4,18 +4,19 @@
 {% block content %}
     <div class="container">
         <h1 class="text-center">Latest Posts</h1>
-        {% for post in latest_posts %}
-            <div class="row" style="margin-top:100px; float:left">
-                <a href="{{post.url}}">
-                <div class="col-sm-3">
-                    {% image post.image fill-300x300 as img %}
-                    <img src="{{img.url}}" alt="{{img.alt}}">
+        <div class="row" style="margin-top:100px;">
+            {% for post in blog_posts %}
+                <div class="col-lg-3 blog_tiles" style="margin-top: 5%;">
+                    <a href="{{post.url}}">
+                    <div>
+                        {% image post.banner_image fill-300x300 as img %}
+                        <img class="img-fluid" src="{{img.url}}" alt="{{img.alt}}">
+                        <p><a href="{{ post.url }}">{{ post.title }}</a></p>
+                        <p>{{ post.specific.subtitle }}</p>
+                    </div>
+                    </a>
                 </div>
-                <div class="col-sm-9">
-                    <a href="{{ post.url }}">{{ post.title }}</a>
-                </div>
-                </a>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

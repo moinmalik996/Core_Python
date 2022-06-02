@@ -1,21 +1,49 @@
 {% extends 'base.html' %}
-{% load wagtailimages_tags  wagtailcore_tags wagtailroutablepage_tags %}
+{% load wagtailimages_tags  wagtailcore_tags wagtailroutablepage_tags cache %}
 
 {% block content %}
     <div class="container">
+        <h3 class="text-center">Categories</h3>
+                {% for category in categories %}
+                    <li class="text-center">
+                        <a href="?category={{ category.slug }}">{{ category.name }}</a>
+                    </li>
+                {% endfor %}
         <a href="{% routablepageurl page 'latest_posts' %}"><h1 class="text-center">Latest Posts</h1></a>
-        {% for post in blog_posts %}
-            <div class="row" style="margin-top:100px; float:left">
-                <a href="{{post.url}}">
-                <div class="col-sm-3">
-                    {% image post.image fill-300x300 as img %}
-                    <img src="{{img.url}}" alt="{{img.alt}}">
-                </div>
-                <div class="col-sm-9">
-                    <a href="{{ post.url }}">{{ post.title }}</a>
-                </div>
-                </a>
+        <div class="row" style="margin-top:100px;">
+            {% for post in blog_posts %}
+                {% cache 604800 post_preview post.id %}
+                    <div class="col-lg-3 blog_tiles" style="margin-top: 5%;">
+                        <a href="{{post.url}}">
+                        <div>
+                            {% image post.banner_image fill-300x300 as img %}
+                            <img class="img-fluid" src="{{img.url}}" alt="{{img.alt}}">
+                            <p><a href="{{ post.url }}">{{ post.title }}</a></p>
+                            <p>{{ post.specific.subtitle }}</p>
+                        </div>
+                        </a>
+                    </div>
+                {% endcache %}
+            {% endfor %}
+        </div>
+        <div class="row" style="margin-top: 150px;">
+            <div class="col-lg-3 offset-lg-6">
+                {% if blog_posts.paginator.num_pages > 1 %}
+                    <nav>
+                        <ul class="pagination">
+                            {% if blog_posts.has_previous %}
+                                <li class="page-item"><a href="?page={{ blog_posts.previous_page_number }}" class="page-link">Previous</a></li>
+                            {% endif %}
+                            {% for page_num in blog_posts.paginator.page_range %}
+                                <li class="page-item {% if page_num == blog_posts.number %} active {% endif %}"><a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a></li>
+                            {% endfor %}
+                            {% if blog_posts.has_next %}
+                                <li class="page-item"><a href="?page={{ blog_posts.next_page_number }}" class="page-link">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}

@@ -58,6 +58,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    
+    'captcha',
+    'wagtailcaptcha',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -179,3 +183,11 @@ WAGTAILSEARCH_BACKENDS = {
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://example.com'
+
+# Recaptcha Settings
+RECAPTCHA_PUBLIC_KEY = '6LcgZQIgAAAAAKpD9n72xs2Vrs3h0n9MQEiuAVN7'
+RECAPTCHA_PRIVATE_KEY = '6LcgZQIgAAAAADgOF-HEhBP7mdxWB1YnBZJ9RTaz'
+NO_CAPTCHA = True
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

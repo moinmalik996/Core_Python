@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h1>{{ self.title}}</h1>
+            <P>
+                {{self.intro|richtext }}
+            </P>
+            <form action="{% pageurl page %}" method="POST">
+                {% csrf_token %}
+                {{ form|crispy}}
+                <input type="submit" value="Submit" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
