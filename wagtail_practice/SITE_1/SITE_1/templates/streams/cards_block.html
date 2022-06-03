@@ -1,0 +1,39 @@
+{% load wagtailimages_tags %}
+<!-- <div class="container">
+    <h1 class="text-center">{{ self.title }}</h1>
+    <div class="card-deck ">
+        {% for card in self.cards %}
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+            <h5 class="card-title">{{ card.title }}</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div> -->
+
+<div class="container">
+    <h1 class="text-center">{{ self.title }}</h1>
+    <div class="row ">
+        {% for card in self.cards %}
+        <div class="col-sm-4">
+            <div class="card">
+              {% image card.image fill-200x300 as img %}
+              <img src="{{ img.url }}" class="card-img-top" alt="{{ img.alt }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ card.image_title }}</h5>
+                <p class="card-text">{{ card.text }}</p>
+                {% if card.button_page %}
+                    <a href="{{ card.button_page.url }}" class="btn btn-primary">Open Profile (Internal)</a>
+                {% elif card.button_url %}
+                    <a href="{{ card.button_url }}" class="btn btn-primary">Open Profile (External)</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+</div>

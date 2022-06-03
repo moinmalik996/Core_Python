@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="text-center">
+            <h1>{{ self.subtitle }}</h1>
+        </div>
+    </div>
+    <div class="container">
+        {% for item in page.content %}
+            {% include_block item %}
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        <a href="{{ settings.sitesettings.SocialMediaSettings.facebook }}">Facebook</a><br>
+        <a href="{{ settings.sitesettings.SocialMediaSettings.twitter }}">Twitter</a><br>
+        <a href="{{ settings.sitesettings.SocialMediaSettings.youtube }}">Youtube</a>
+    </div>
+
+{% endblock %}
