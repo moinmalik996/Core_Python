@@ -33,8 +33,3 @@ def both(*args, **kwargs):
     
 both(1, 2, 3, name='Moin',age=12)
 
-
-class General():
-
-    def __init__(self) -> None:
-        pass
