@@ -2,7 +2,7 @@
 Commands to install these packages.
 
 
-pip install selenium==4.0.0.b1
+pip install selenium
 pip install webdriver-manager
 
 """
