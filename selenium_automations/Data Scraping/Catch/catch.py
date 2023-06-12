@@ -1,25 +1,42 @@
 import csv
-from os import path
-from pprint import pprint
 import urllib
-
-
+from os import path
+from time import sleep
 
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from time import sleep
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+
+from selenium.common.exceptions import TimeoutException
+
+from webdriver_manager.chrome import ChromeDriverManager
+
+def extract_data(file_func, field_names_func, data):
+    file_exist = path.exists(file_func)
+    if file_exist:
+        with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func, extrasaction='ignore')
+            file_writer.writerow(data)
+            myfile.close()
+    else:
+        with open(file_func, 'w', newline='', encoding='utf-8') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func,  extrasaction='ignore')
+            file_writer.writeheader()
+            file_writer.writerow(data)
+            myfile.close()
 
 
 total_crawled_products = 0
 t = 10
+t5 = t - 2
 CATEGORIES_MAPPING = dict()
 SUB_CATEGORIES_MAPPING = dict()
+PRODUCT_DATA = dict()
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 driver.maximize_window()
@@ -66,6 +83,9 @@ for key, value in CATEGORIES_MAPPING.items():
 choose_category = int(input('Choose a category with a number : '))
 
 driver.get(CATEGORIES_MAPPING[choose_category]['url'])
+PRODUCT_DATA['CATEGORY'] = CATEGORIES_MAPPING[choose_category]['name']
+PRODUCT_DATA['CATEGORY URL'] = CATEGORIES_MAPPING[choose_category]['url']
+
 
 sub_categories = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, sub_categories_loc)))
 
@@ -84,20 +104,64 @@ choose_sub_category = int(input("CHoose a subcategory : "))
 min_price = int(input('Choose a minimum price : '))
 max_price = int(input('Choose a maximum price : '))
 
+PRODUCT_DATA['SUB CATEGORY'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['name']
+PRODUCT_DATA['SUB CATEGORY URL'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['url']
+
+
 args = {
-    'f[price_range:max]': max_price, 
+    'f[price_range:max]': max_price,
     'f[price_range:min]': min_price,
     'page': 1
     }
 
 url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_category]['url'], urllib.parse.urlencode(args))
-driver.get(url)
+driver.get('https://www.catch.com.au/shop/home-kitchen/bedding')
 
 products = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, products_div_loc)))
 
-# for product in products:
+for idx in range(1, len(products) + 1):
 
-#     Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, products_div_loc)))
+    base_xpath = "//div[@class='css-wr32q5']"
+    product_xpath = "{}/div[{}]/div/div[2]/div[1]/div[1]/span/h2/a".format(base_xpath, idx)
+    brand_xpath = "{}/div[{}]/div/div[2]/div/div[2]/span/a".format(base_xpath, idx)
+    discount_xpath = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[1]/div/span".format(base_xpath, idx)
+    price_xpath_1 = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[2]/div/span[2]".format(base_xpath, idx)
+    price_xpath_2 = "{}/div[{}]/div/div[2]/a/div/div/div/div/div/span[2]".format(base_xpath, idx)
+
+    product = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, product_xpath)))
+    brand = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, brand_xpath)))
+
+    product_name = product.get_attribute('text')
+    product_url = product.get_attribute('href')
+    brand_name = brand.get_attribute('text')
+    brand_url = brand.get_attribute('href')
+
+    try:
+        price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_1)))
+        discount = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, discount_xpath)))
+    except TimeoutException:
+        print('=========TIMEOUT=========')
+        price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_2)))
+        print('Got Element') if isinstance(price, WebElement) else print('Not Not Found')
+    finally:
+        pass
+
+    
+    product_price = price.get_attribute('text') if isinstance(price, WebElement) else "Not Found"
+    product_discount = discount.get_attribute('text') if isinstance(discount, WebElement) else 'May / May Not'
+
+
+    data_header = ['CATEGORY', 'CATEGORY URL', 'SUB CATEGORY', 'SUB CATEGORY URL', 'PRODUCT NAME', 'PRODUCT URL', 'PRICE', 'OLD PRICE', 'BRAND NAME', 'BRAND URL']
+    PRODUCT_DATA['PRODUCT NAME'] = product_name
+    PRODUCT_DATA['PRODUCT URL'] = product_url
+    PRODUCT_DATA['PRICE'] = product_price
+    PRODUCT_DATA['OLD PRICE'] = product_discount
+    PRODUCT_DATA['BRAND NAME'] = brand_name
+    PRODUCT_DATA['BRAND URL'] = brand_url
+
+    file = "{}-{}.{}".format(PRODUCT_DATA['CATEGORY'], PRODUCT_DATA['SUB CATEGORY'], 'csv')
+
+    extract_data(file, data_header, PRODUCT_DATA)
 
 
 sleep(20)
