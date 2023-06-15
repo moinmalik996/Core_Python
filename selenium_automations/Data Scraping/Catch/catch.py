@@ -8,24 +8,22 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
 from selenium.common.exceptions import TimeoutException
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-def extract_data(file_func, field_names_func, data):
-    file_exist = path.exists(file_func)
+def extract_data(file_name, data_heading, data):
+    file_exist = path.exists(file_name)
     if file_exist:
-        with open(file_func, 'a', newline='', encoding='utf-8') as myfile:
-            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func, extrasaction='ignore')
+        with open(file_name, 'a', newline='', encoding='utf-8') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=data_heading, extrasaction='ignore')
             file_writer.writerow(data)
             myfile.close()
     else:
-        with open(file_func, 'w', newline='', encoding='utf-8') as myfile:
-            file_writer = csv.DictWriter(myfile, fieldnames=field_names_func,  extrasaction='ignore')
+        with open(file_name, 'w', newline='', encoding='utf-8') as myfile:
+            file_writer = csv.DictWriter(myfile, fieldnames=data_heading,  extrasaction='ignore')
             file_writer.writeheader()
             file_writer.writerow(data)
             myfile.close()
@@ -138,24 +136,36 @@ for idx in range(1, len(products) + 1):
 
     try:
         price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_1)))
-        discount = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, discount_xpath)))
+        old_price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, discount_xpath)))
     except TimeoutException:
-        print('=========TIMEOUT=========')
         price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_2)))
-        print('Got Element') if isinstance(price, WebElement) else print('Not Not Found')
+        old_price = None
     finally:
         pass
 
     
-    product_price = price.get_attribute('text') if isinstance(price, WebElement) else "Not Found"
-    product_discount = discount.get_attribute('text') if isinstance(discount, WebElement) else 'May / May Not'
+    product_price = price.text if isinstance(price, WebElement) else "Not Found"
+    product_old_price = old_price.text if old_price is not None else 0
 
 
-    data_header = ['CATEGORY', 'CATEGORY URL', 'SUB CATEGORY', 'SUB CATEGORY URL', 'PRODUCT NAME', 'PRODUCT URL', 'PRICE', 'OLD PRICE', 'BRAND NAME', 'BRAND URL']
+
+
+    data_header = ['CATEGORY', 
+                   'CATEGORY URL', 
+                   'SUB CATEGORY', 
+                   'SUB CATEGORY URL', 
+                   'PRODUCT NAME', 
+                   'PRODUCT URL', 
+                   'PRICE', 
+                   'OLD PRICE', 
+                   'BRAND NAME', 
+                   'BRAND URL'
+                ]
+    
     PRODUCT_DATA['PRODUCT NAME'] = product_name
     PRODUCT_DATA['PRODUCT URL'] = product_url
     PRODUCT_DATA['PRICE'] = product_price
-    PRODUCT_DATA['OLD PRICE'] = product_discount
+    PRODUCT_DATA['OLD PRICE'] = product_old_price
     PRODUCT_DATA['BRAND NAME'] = brand_name
     PRODUCT_DATA['BRAND URL'] = brand_url
 
