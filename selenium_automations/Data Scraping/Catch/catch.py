@@ -31,7 +31,7 @@ def extract_data(file_name, data_heading, data):
 
 total_crawled_products = 0
 t = 10
-t5 = t - 2
+t5 = t - 8
 CATEGORIES_MAPPING = dict()
 SUB_CATEGORIES_MAPPING = dict()
 PRODUCT_DATA = dict()
@@ -106,72 +106,81 @@ PRODUCT_DATA['SUB CATEGORY'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['name
 PRODUCT_DATA['SUB CATEGORY URL'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['url']
 
 
-args = {
+
+
+for i in range(1, 100):  # a hard coded loop , should be dynamic 
+
+    args = {
     'f[price_range:max]': max_price,
     'f[price_range:min]': min_price,
-    'page': 1
+    'page': i
     }
 
-url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_category]['url'], urllib.parse.urlencode(args))
-driver.get('https://www.catch.com.au/shop/home-kitchen/bedding')
+    url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_category]['url'], urllib.parse.urlencode(args))
+    driver.get(url)
 
-products = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, products_div_loc)))
+    products = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, products_div_loc)))
 
-for idx in range(1, len(products) + 1):
+    for idx in range(1, len(products) + 1):
 
-    base_xpath = "//div[@class='css-wr32q5']"
-    product_xpath = "{}/div[{}]/div/div[2]/div[1]/div[1]/span/h2/a".format(base_xpath, idx)
-    brand_xpath = "{}/div[{}]/div/div[2]/div/div[2]/span/a".format(base_xpath, idx)
-    discount_xpath = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[1]/div/span".format(base_xpath, idx)
-    price_xpath_1 = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[2]/div/span[2]".format(base_xpath, idx)
-    price_xpath_2 = "{}/div[{}]/div/div[2]/a/div/div/div/div/div/span[2]".format(base_xpath, idx)
+        base_xpath = "//div[@class='css-wr32q5']"
+        product_xpath = "{}/div[{}]/div/div[2]/div[1]/div[1]/span/h2/a".format(base_xpath, idx)
+        brand_xpath = "{}/div[{}]/div/div[2]/div/div[2]/span/a".format(base_xpath, idx)
+        old_price_xpath = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[1]/div/span".format(base_xpath, idx)
+        price_xpath_1 = "{}/div[{}]/div/div[2]/a/div/div[2]/div/div[2]/div/span[2]".format(base_xpath, idx)
+        price_xpath_2 = "{}/div[{}]/div/div[2]/a/div/div/div/div/div/span[2]".format(base_xpath, idx)
 
-    product = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, product_xpath)))
-    brand = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, brand_xpath)))
+        product = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, product_xpath)))
+        try:
+            brand = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, brand_xpath)))
+        except TimeoutException:
+            brand = None
 
-    product_name = product.get_attribute('text')
-    product_url = product.get_attribute('href')
-    brand_name = brand.get_attribute('text')
-    brand_url = brand.get_attribute('href')
+        product_name = product.get_attribute('text')
+        product_url = product.get_attribute('href')
+        brand_name = brand.get_attribute('text') if isinstance(brand, WebElement) else None
+        brand_url = brand.get_attribute('href') if isinstance(brand, WebElement) else None
 
-    try:
-        price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_1)))
-        old_price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, discount_xpath)))
-    except TimeoutException:
-        price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_2)))
-        old_price = None
-    finally:
-        pass
+        try:
+            price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_1)))
+            old_price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, old_price_xpath)))
+        except TimeoutException:
+            price = Wait(driver, t5).until(EC.presence_of_element_located((By.XPATH, price_xpath_2)))
+            old_price = None
+        finally:
+            pass
 
-    
-    product_price = price.text if isinstance(price, WebElement) else "Not Found"
-    product_old_price = old_price.text if old_price is not None else 0
-
-
+        
+        product_price = price.text if isinstance(price, WebElement) else "Not Found"
+        product_old_price = old_price.text if old_price is not None else 0
 
 
-    data_header = ['CATEGORY', 
-                   'CATEGORY URL', 
-                   'SUB CATEGORY', 
-                   'SUB CATEGORY URL', 
-                   'PRODUCT NAME', 
-                   'PRODUCT URL', 
-                   'PRICE', 
-                   'OLD PRICE', 
-                   'BRAND NAME', 
-                   'BRAND URL'
-                ]
-    
-    PRODUCT_DATA['PRODUCT NAME'] = product_name
-    PRODUCT_DATA['PRODUCT URL'] = product_url
-    PRODUCT_DATA['PRICE'] = product_price
-    PRODUCT_DATA['OLD PRICE'] = product_old_price
-    PRODUCT_DATA['BRAND NAME'] = brand_name
-    PRODUCT_DATA['BRAND URL'] = brand_url
 
-    file = "{}-{}.{}".format(PRODUCT_DATA['CATEGORY'], PRODUCT_DATA['SUB CATEGORY'], 'csv')
 
-    extract_data(file, data_header, PRODUCT_DATA)
+        data_header = ['CATEGORY', 
+                    'CATEGORY URL', 
+                    'SUB CATEGORY', 
+                    'SUB CATEGORY URL', 
+                    'PRODUCT NAME', 
+                    'PRODUCT URL', 
+                    'PRICE', 
+                    'OLD PRICE', 
+                    'BRAND NAME', 
+                    'BRAND URL',
+                    'PAGE NO'
+                    ]
+        
+        PRODUCT_DATA['PRODUCT NAME'] = product_name
+        PRODUCT_DATA['PRODUCT URL'] = product_url
+        PRODUCT_DATA['PRICE'] = product_price
+        PRODUCT_DATA['OLD PRICE'] = product_old_price
+        PRODUCT_DATA['BRAND NAME'] = brand_name
+        PRODUCT_DATA['BRAND URL'] = brand_url
+        PRODUCT_DATA['PAGE NO'] = i
+
+        file = "{}-{}.{}".format(PRODUCT_DATA['CATEGORY'], PRODUCT_DATA['SUB CATEGORY'], 'csv')
+
+        extract_data(file, data_header, PRODUCT_DATA)
 
 
 sleep(20)
