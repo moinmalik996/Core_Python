@@ -116,7 +116,7 @@ for i in range(1, 100):  # a hard coded loop , should be dynamic
     'page': i
     }
 
-    url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_category]['url'], urllib.parse.urlencode(args))
+    url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_sub_category]['url'], urllib.parse.urlencode(args))
     driver.get(url)
 
     products = Wait(driver, t).until(EC.presence_of_all_elements_located((By.XPATH, products_div_loc)))
