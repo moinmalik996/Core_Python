@@ -36,7 +36,7 @@ CATEGORIES_MAPPING = dict()
 SUB_CATEGORIES_MAPPING = dict()
 PRODUCT_DATA = dict()
 
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(version='114.0.5735.90').install()))
 driver.maximize_window()
 driver.get('https://www.catch.com.au')
 
@@ -101,6 +101,7 @@ for idx, (key, value) in enumerate(SUB_CATEGORIES_MAPPING.items()):
 choose_sub_category = int(input("CHoose a subcategory : "))
 min_price = int(input('Choose a minimum price : '))
 max_price = int(input('Choose a maximum price : '))
+free_delivery = input('Only include free delivery (Y / N) : ')
 
 PRODUCT_DATA['SUB CATEGORY'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['name']
 PRODUCT_DATA['SUB CATEGORY URL'] = SUB_CATEGORIES_MAPPING[choose_sub_category]['url']
@@ -115,6 +116,10 @@ for i in range(1, 100):  # a hard coded loop , should be dynamic
     'f[price_range:min]': min_price,
     'page': i
     }
+
+    if free_delivery == 'Y':
+        args['f[delivery]'] = 'free'
+
 
     url = "{}?{}".format(SUB_CATEGORIES_MAPPING[choose_sub_category]['url'], urllib.parse.urlencode(args))
     driver.get(url)
